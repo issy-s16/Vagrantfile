@@ -63,8 +63,27 @@ Vagrant.configure("2") do |config|
   # Enable provisioning with a shell script. Additional provisioners such as
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
-  # config.vm.provision "shell", inline: <<-SHELL
-  #   apt-get update
-  #   apt-get install -y apache2
-  # SHELL
+  config.vm.provision "shell", inline: <<-SHELL
+    # git
+    sudo yum -y install git
+    
+    # docker
+    ## 現在Dockerがインストールされていたら削除する
+    sudo yum remove docker docker-client docker-client-latest docker-common docker-latest docker-latest-logrotate docker-logrotate docker-selinux docker-engine-selinux docker-engine
+    ## 必要パッケージのインストール
+    sudo yum install -y yum-utils device-mapper-persistent-data lvm2
+    ## リポジトリの追加
+    sudo yum-config-manager --add-repo https://download.docker.com/linux/centos/docker-ce.repo
+    ## yumのパッケージインデックスの更新
+    sudo yum makecache fast
+    ## dockerのインストール
+    sudo yum install -y docker-ce
+    ## dockerの起動
+    sudo systemctl start docker
+    ## dockerがOS起動時に自動起動されるように設定
+    sudo systemctl enable docker
+
+    #  apt-get update
+    #  apt-get install -y apache2
+  SHELL
 end
