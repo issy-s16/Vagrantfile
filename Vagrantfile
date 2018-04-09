@@ -64,6 +64,9 @@ Vagrant.configure("2") do |config|
   # Puppet, Chef, Ansible, Salt, and Docker are also available. Please see the
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
+    # yum update
+    sudo yum -y update
+    
     # git
     sudo yum -y install git
     
@@ -83,7 +86,9 @@ Vagrant.configure("2") do |config|
     ## dockerがOS起動時に自動起動されるように設定
     sudo systemctl enable docker
 
-    #  apt-get update
-    #  apt-get install -y apache2
+    # docker-compose
+    sudo curl -L https://github.com/docker/compose/releases/download/1.20.1/docker-compose-$(uname -s)-$(uname -m) -o /usr/local/bin/docker-compose
+    sudo chmod +x /usr/local/bin/docker-compose
+
   SHELL
 end
